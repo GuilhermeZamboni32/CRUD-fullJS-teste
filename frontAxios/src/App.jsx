@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import App2 from './app2';
+import App3 from './app3';
 import './App.css';
 
 function App() {
@@ -40,6 +42,7 @@ function App() {
             if (response.status === 201) {
                 fetchClientes();
                 limparForm();
+                alert('Cliente cadastrado com sucesso!');
             }
         } catch (error) {
             console.error('Erro ao adicionar cliente:', error);
@@ -59,6 +62,7 @@ function App() {
                 fetchClientes();
                 setClienteSelecionado(null);
                 limparForm();
+                alert('Altereções feitas com sucesso!');
             }
         } catch (error) {
             console.error('Erro ao atualizar cliente:', error);
@@ -80,6 +84,7 @@ function App() {
             const response = await axios.delete(`http://localhost:3000/clientes/${id}`);
             if (response.status === 200) {
                 fetchClientes();
+                alert('Cliente deletado com sucesso!');
             }
         } catch (error) {
             console.error('Erro ao deletar cliente:', error);
@@ -160,6 +165,10 @@ function App() {
                     </div>
                 ))}
             </section>
+
+            <App2 />
+            <App3 />
+
         </div>
     );
 }
