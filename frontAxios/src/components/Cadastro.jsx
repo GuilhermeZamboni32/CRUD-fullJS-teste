@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import './App.css';
+import axios from 'axios';
+import './Cadastro.css';
 
-function App() {
+function Cadastro() {
     const [clientes, setClientes] = useState([]);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
 
@@ -10,39 +11,36 @@ function App() {
     const [inputEndereco, setInputEndereco] = useState('')
     const [inputTelefone, setInputTelefone] = useState('')
 
-    const apiUrl = 'http://localhost:3000/clientes';
-
-    useEffect(() => {
-        fetchClientes();
-    }, []);
-
     const fetchClientes = async () => {
         try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            setClientes(data);
+            const response = await axios.get('http://localhost:3000/clientes');
+            setClientes(response.data);
         } catch (error) {
             console.error('Erro ao buscar clientes:', error);
         }
     };
 
-    const cadastrarCliente = async () => {
-        const cliente = {
-            nome: inputNome,
-            endereco: inputEndereco,
-            email: inputEmail,
-            telefone: inputTelefone
-        };
+    useEffect(() => {
+        fetchClientes();
+    }, []);
 
+    useEffect(() => {
+        console.log(clientes);
+    }, [clientes]);
+
+    const cadastrarCliente = async () => {
         try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cliente)
-            });
+            const cliente = {
+                nome: inputNome,
+                endereco: inputEndereco,
+                email: inputEmail,
+                telefone: inputTelefone
+            };
+            const response = await axios.post('http://localhost:3000/clientes', cliente);
             if (response.status === 201) {
                 fetchClientes();
                 limparForm();
+                alert('Cliente cadastrado com sucesso!');
             }
         } catch (error) {
             console.error('Erro ao adicionar cliente:', error);
@@ -50,23 +48,19 @@ function App() {
     };
 
     const salvarCliente = async () => {
-        const cliente = {
-            nome: inputNome,
-            endereco: inputEndereco,
-            email: inputEmail,
-            telefone: inputTelefone
-        };
-
         try {
-            const response = await fetch(`${apiUrl}/${clienteSelecionado.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cliente)
-            });
+            const cliente = {
+                nome: inputNome,
+                endereco: inputEndereco,
+                email: inputEmail,
+                telefone: inputTelefone
+            };
+            const response = await axios.put(`http://localhost:3000/clientes/${clienteSelecionado.id}`, cliente);
             if (response.status === 200) {
                 fetchClientes();
                 setClienteSelecionado(null);
                 limparForm();
+                alert('Altereções feitas com sucesso!');
             }
         } catch (error) {
             console.error('Erro ao atualizar cliente:', error);
@@ -75,10 +69,9 @@ function App() {
 
     const buscarClientePorId = async (id) => {
         try {
-            const response = await fetch(`${apiUrl}/${id}`);
-            const data = await response.json();
-            setClienteSelecionado(data);
-            exibirCliente(data);
+            const response = await axios.get(`http://localhost:3000/clientes/${id}`);
+            setClienteSelecionado(response.data);
+            exibirCliente(response.data);
         } catch (error) {
             console.error('Erro ao buscar cliente por ID:', error);
         }
@@ -86,11 +79,10 @@ function App() {
 
     const deletarCliente = async (id) => {
         try {
-            const response = await fetch(`${apiUrl}/${id}`, {
-                method: 'DELETE'
-            });
+            const response = await axios.delete(`http://localhost:3000/clientes/${id}`);
             if (response.status === 200) {
                 fetchClientes();
+                alert('Cliente deletado com sucesso!');
             }
         } catch (error) {
             console.error('Erro ao deletar cliente:', error);
@@ -98,25 +90,25 @@ function App() {
     };
 
     function limparForm() {
-        setInputNome('');
-        setInputEmail('');
-        setInputEndereco('');
-        setInputTelefone('');
+        setInputNome('')
+        setInputEmail('')
+        setInputEndereco('')
+        setInputTelefone('')
     }
 
     function exibirCliente(cliente) {
-        setInputNome(cliente.nome || '');
-        setInputEmail(cliente.email || '');
-        setInputEndereco(cliente.endereco || '');
-        setInputTelefone(cliente.telefone || '');
+        setInputNome(cliente.nome || '')
+        setInputEmail(cliente.email || '')
+        setInputEndereco(cliente.endereco || '')
+        setInputTelefone(cliente.telefone || '')
     }
 
     return (
-        <div className='app-container'>
-            <h1>CRUD de Clientes</h1>
+        <div className='container-cadastro'>
+            <h1 className='titulo-cadastro'>CRUD de Clientes</h1>
 
-            <div className='form'>
-                <div className="input-container">
+            <div className='form-cadastro'>
+                <div className="input-container-cadastro">
                     <label htmlFor="nome">Nome</label>
                     <input
                         type="text"
@@ -126,8 +118,8 @@ function App() {
                         required
                     />
                 </div>
-                <div className="input-container">
-                    <label htmlFor="endereco">Endereço</label>
+                <div className="input-container-cadastro">
+                    <label htmlFor="">Endereço</label>
                     <input
                         type="text"
                         placeholder="Praça da Árvore"
@@ -135,8 +127,8 @@ function App() {
                         onChange={(event) => setInputEndereco(event.target.value)}
                     />
                 </div>
-                <div className="input-container">
-                    <label htmlFor="email">Email</label>
+                <div className="input-container-cadastro">
+                    <label htmlFor="">Email</label>
                     <input
                         type="email"
                         placeholder="jorge@florista.com"
@@ -145,8 +137,8 @@ function App() {
                         required
                     />
                 </div>
-                <div className="input-container">
-                    <label htmlFor="telefone">Telefone</label>
+                <div className="input-container-cadastro">
+                    <label htmlFor="">Telefone</label>
                     <input
                         type="text"
                         placeholder="48 99999-9999"
@@ -154,18 +146,18 @@ function App() {
                         onChange={(event) => setInputTelefone(event.target.value)}
                     />
                 </div>
-                {clienteSelecionado && <button type="button" onClick={salvarCliente}>Salvar Alterações</button>}
-                {!clienteSelecionado && <button type="button" onClick={cadastrarCliente}>Cadastrar Cliente</button>}
+                {clienteSelecionado && <button type="button-cadastro" onClick={salvarCliente}>Salvar Alterações</button>}
+                {!clienteSelecionado && <button type="button-cadastro" onClick={cadastrarCliente}>Cadastrar Cliente</button>}
             </div>
 
-            <section className='clientes'>
+            <section className='clientes-container'>
                 {clientes.map((cliente) => (
                     <div key={cliente.id} className='cliente'>
                         <h2>{cliente.nome}</h2>
                         <p>{cliente.email}</p>
                         <p>{cliente.telefone}</p>
                         <p>{cliente.endereco}</p>
-                        <p>ID: {cliente.id}</p>
+                        <p>{cliente.id}</p>
                         <button onClick={() => buscarClientePorId(cliente.id)}>Editar</button>
                         <button onClick={() => deletarCliente(cliente.id)}>Deletar</button>
                     </div>
@@ -175,4 +167,4 @@ function App() {
     );
 }
 
-export default App;
+export default Cadastro;

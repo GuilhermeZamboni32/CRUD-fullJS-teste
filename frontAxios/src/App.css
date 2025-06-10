@@ -1,66 +1,67 @@
-input{
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
+body {
+  background: #44474a;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-.input-container{
+.app-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  gap: 32px;
+  padding: 32px 0 0 0;
+  background: #44474a;
+  min-height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
 }
-.form{
+
+.cadastro, .exercicios, .dietas {
+  background: #e6e7ea;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 0 0 32px 0;
+  min-width: 370px;
+  max-width: 400px;
+  width: 370px;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #eeeeee;
+  border: 4px solid #222326;
+  box-sizing: border-box;
 }
 
-button{
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  background-color: #333;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.cadastro, .exercicios, .dietas {
+  /* Garante que todos tenham a mesma altura */
+  height: 100%;
 }
 
-.clientes{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
+.cadastro h1, .exercicios h1, .dietas h1 {
+  font-size: 2.4rem;
+  margin: 0;
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-align: center;
+  background: #aeb0b7;
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  padding: 18px 0 10px 0;
+  border-bottom: 4px solid #e6e7ea;
 }
 
-.cliente{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  width: 300px;
+@media (max-width: 1200px) {
+  .app-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .cadastro, .exercicios, .dietas {
+    width: 95vw;
+    min-width: unset;
+    max-width: unset;
+    min-height: unset;
+  }
 }
-
-.app-container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
