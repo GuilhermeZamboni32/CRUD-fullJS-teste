@@ -204,6 +204,74 @@ app.delete('/dietas/:id', async (req, res) => {
 });
 
 ///////////////////////////////////////////////////////////////////////
+//                            ROTAS DE CLIENTES                      //
+///////////////////////////////////////////////////////////////////////
+
+// Criar funcionário
+app.post('/funcionarios', async (req, res) => {
+    const { nome, email, telefone, profissao } = req.body;
+    try {
+        const result = await pool.query(
+            'INSERT INTO funcionarios (nome, email, telefone, profissao) VALUES ($1, $2, $3, $4) RETURNING *',
+            [nome, email, telefone, profissao]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao adicionar funcionário' });
+    }
+});
+
+// Buscar todos os funcionários
+app.get('/funcionarios', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM funcionarios');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao buscar funcionários' });
+    }
+});
+
+// Buscar funcionário por ID
+app.get('/funcionarios/:id', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM funcionarios WHERE id = $1', [req.params.id]);
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Funcionário não encontrado' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao buscar funcionário' });
+    }
+});
+
+// Atualizar funcionário
+app.put('/funcionarios/:id', async (req, res) => {
+    const { nome, email, telefone, profissao } = req.body;
+    try {
+        const result = await pool.query(
+            'UPDATE funcionarios SET nome = $1, email = $2, telefone = $3, profissao = $4 WHERE id = $5 RETURNING *',
+            [nome, email, telefone, profissao, req.params.id]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Funcionário não encontrado' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao atualizar funcionário' });
+    }
+});
+
+// Deletar funcionário
+app.delete('/funcionarios/:id', async (req, res) => {
+    try {
+        const result = await pool.query('DELETE FROM funcionarios WHERE id = $1 RETURNING *', [req.params.id]);
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Funcionário não encontrado' });
+        res.json({ message: 'Funcionário deletado com sucesso' });
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao deletar funcionário' });
+    }
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////
 //                           INICIAR SERVIDOR                        //
 ///////////////////////////////////////////////////////////////////////
 

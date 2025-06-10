@@ -3,6 +3,7 @@ import './App.css';
 import Cadastro from './components/Cadastro';
 import Exercicio from './components/Exercicio';
 import Dieta from './components/Dieta';
+import Funcionarios from './components/Funcionarios';
 
 function App() {
     
@@ -18,6 +19,10 @@ function App() {
 
             <div>
                 <Dieta />
+            </div>
+
+            <div>
+                <Funcionarios />
             </div>
         </div>
     );
